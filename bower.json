@@ -1,0 +1,23 @@
+{
+  "name": "ABSOLVENTA Helpers",
+  "version": "1.0.0",
+  "authors": [
+    "Alex Gieche <alex.gieche@gmail.com>"
+  ],
+  "main": "src/helpers.js",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "spec",
+    "tests"
+  ],
+  "dependencies": {
+    "modulejs": "1.5.0"
+  },
+  "devDependencies": {
+    "jquery": "~2.1.0"
+  }
+}
