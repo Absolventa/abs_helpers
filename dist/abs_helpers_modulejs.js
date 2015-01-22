@@ -5,15 +5,56 @@
 
         var Helpers = (function() {
 
-            var convertToCurrency,
+            var addListener,
+                arrayIncludes,
+                convertToCurrency,
+                copyObjectPropertiesFromTo,
+                createConfigObject,
+                filenameOf,
+                insertAfter,
                 isMobileBrowser,
+                isEmail,
                 isNumber,
                 loadScriptAsync,
-                isEmail,
-                type,
+                mergeObjects,
                 parameterize,
-                arrayIncludes,
-                filenameOf;
+                removeListener,
+                type;
+
+
+            addListener = function(obj, evt, fnc) {
+                /**
+                * Cross Browser helper to addEventListener.
+                *
+                * @param {HTMLElement} obj The Element to attach event to.
+                * @param {string} evt The event that will trigger the binded function.
+                * @param {function(event)} fnc The function to bind to the element.
+                * @return {boolean} true if it was successfuly binded.
+                */
+
+                // W3C model
+                if (obj.addEventListener) {
+                    obj.addEventListener(evt, fnc, false);
+                    return true;
+                }
+                // Microsoft model
+                if (obj.attachEvent) {
+                    obj.attachEvent("on" + evt, fnc);
+                    return true;
+                }
+
+                return false;
+            };
+
+            removeListener = function(obj, type, fnc) {
+               if (obj.removeEventListener) {
+                  obj.removeEventListener(type, fnc, false);
+               } else if (obj.detachEvent) {
+                  obj.detachEvent("on" + type, fnc);
+               }
+            };
+
+
 
             /**
              * Checks if given string is in given Array
@@ -31,6 +72,21 @@
                     return false;
                 }
             };
+
+
+            createConfigObject = function(configObject, defaultObject) {
+                var mergedObject = {};
+
+
+                if (configObject === null || typeof configObject !== 'object') {
+                    configObject = {};
+                }
+
+                mergedObject = this.mergeObjects(configObject, defaultObject);
+
+                return mergedObject;
+            };
+
 
             /**
              * Returns the filename of an given file input field
@@ -103,6 +159,10 @@
                 return formattedAmount;
             };
 
+            insertAfter = function(referenceNode, newNode) {
+                referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+            };
+
             /**
              * Checks if the user agent is from a known mobile device, i.e. one of
              * Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini
@@ -157,6 +217,53 @@
 
                 return false;
             };
+
+            /**
+             * Creates a merge object out of given config and default objects.
+             *
+             * @function mergeObjects
+             * @param {object} configObject
+             * @param {object} defaultObject
+             * @return {object}
+             * @example
+             * mergeObjects({test: 'my shiny config value'}, {test: 'my default value'});     // { test: 'my shiny config value'}
+             *
+             */
+
+            mergeObjects = function(configObject, defaultObject) {
+                var mergedObject = {};
+
+                mergedObject = this.copyObjectPropertiesFromTo(mergedObject, defaultObject);
+                mergedObject = this.copyObjectPropertiesFromTo(mergedObject, configObject);
+
+                return mergedObject;
+            };
+
+
+
+
+            copyObjectPropertiesFromTo = function (targetObject, senderObject) {
+                var prop;
+
+                for (prop in senderObject) {
+                    try {
+                        // Property in destination object set; update its value.
+                        if (senderObject[prop].constructor === Object) {
+                            targetObject[prop] = this.mergeObjects(targetObject[prop], senderObject[prop]);
+                        } else {
+                            targetObject[prop] = senderObject[prop];
+                        }
+                    } catch (e) {
+                        // Property in destination object not set; create it and set its value.
+                        targetObject[prop] = senderObject[prop];
+                    }
+                }
+
+                return targetObject;
+            };
+
+
+
 
             /**
              * Identifies the type of the given subject param.
@@ -242,16 +349,23 @@
             };
 
             return {
+                addListener : addListener,
+                arrayIncludes : arrayIncludes,
                 convertToCurrency : convertToCurrency,
+                copyObjectPropertiesFromTo : copyObjectPropertiesFromTo,
+                createConfigObject: createConfigObject,
+                filenameOf : filenameOf,
+                insertAfter : insertAfter,
+                isEmail : isEmail,
                 isMobileBrowser : isMobileBrowser,
                 isNumber : isNumber,
                 loadScriptAsync : loadScriptAsync,
-                isEmail : isEmail,
-                arrayIncludes : arrayIncludes,
-                filenameOf : filenameOf,
-                type : type,
-                parameterize : parameterize
+                mergeObjects : mergeObjects,
+                parameterize : parameterize,
+                removeListener : removeListener,
+                type : type
             };
+
         }());
 
 
