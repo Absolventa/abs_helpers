@@ -5,7 +5,7 @@
   "authors": [
     "Alex Gieche <alex.gieche@gmail.com>"
   ],
-  "main": "src/helpers.js",
+  "main": "dist/helpers.js",
   "license": "MIT",
   "keywords": ["absolventa"],
   "private": false,
