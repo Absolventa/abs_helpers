@@ -1,9 +1,11 @@
-(function() {
+/*global modulejs, window, navigator*/
+
+(function () {
     'use strict';
 
-    modulejs.define('abs_helpers', function() {
+    modulejs.define('abs_helpers', function () {
 
-        var Helpers = (function() {
+        var Helpers = (function () {
 
             var addListener,
                 arrayIncludes,
@@ -22,7 +24,7 @@
                 type;
 
 
-            addListener = function(obj, evt, fnc) {
+            addListener = function (obj, evt, fnc) {
                 /**
                 * Cross Browser helper to addEventListener.
                 *
@@ -46,15 +48,13 @@
                 return false;
             };
 
-            removeListener = function(obj, type, fnc) {
-               if (obj.removeEventListener) {
-                  obj.removeEventListener(type, fnc, false);
-               } else if (obj.detachEvent) {
-                  obj.detachEvent("on" + type, fnc);
-               }
+            removeListener = function (obj, type, fnc) {
+                if (obj.removeEventListener) {
+                    obj.removeEventListener(type, fnc, false);
+                } else if (obj.detachEvent) {
+                    obj.detachEvent("on" + type, fnc);
+                }
             };
-
-
 
             /**
              * Checks if given string is in given Array
@@ -65,16 +65,16 @@
              * @returns {boolean} true or false
              */
 
-            arrayIncludes = function(name, inArray) {
-                if(inArray.indexOf(name) >= 0) {
+            arrayIncludes = function (name, inArray) {
+                if (inArray.indexOf(name) >= 0) {
                     return true;
-                } else {
-                    return false;
                 }
+
+                return false;
             };
 
 
-            createConfigObject = function(configObject, defaultObject) {
+            createConfigObject = function (configObject, defaultObject) {
                 var mergedObject = {};
 
 
@@ -120,7 +120,7 @@
              * @param {boolean} [appendCurrency=true]
              * @returns {string} Formatted string, e.g. '1.000,25€'
              */
-            convertToCurrency = function(amount, currencySymbol, numberOfDecimals, spacing, thousandsSeparatorSymbol, decimalSeparatorSymbol, appendCurrency) {
+            convertToCurrency = function (amount, currencySymbol, numberOfDecimals, spacing, thousandsSeparatorSymbol, decimalSeparatorSymbol, appendCurrency) {
 
                 var spacingString,
                     formattedAmount,
@@ -159,7 +159,7 @@
                 return formattedAmount;
             };
 
-            insertAfter = function(referenceNode, newNode) {
+            insertAfter = function (referenceNode, newNode) {
                 referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
             };
 
@@ -191,7 +191,7 @@
              * @param {numeric} possiblyANumber
              * @return {boolean}
              */
-            isNumber = function(possiblyANumber) {
+            isNumber = function (possiblyANumber) {
                 return !isNaN(parseFloat(possiblyANumber)) && isFinite(possiblyANumber);
             };
 
@@ -208,7 +208,7 @@
              * isEmail("mäöüÄÖÜß_päöü@mÄÖÜß.museum"); // => true
              *
              */
-            isEmail = function(text) {
+            isEmail = function (text) {
                 var regex = /[a-zäöüÄÖÜß0-9!#$%&'*+\/=?\^_`{|}~\-]+(?:\.[a-zäöüÄÖÜß0-9!#$%&'*+\/=?\^_`{|}~\-]+)*@(?:[a-zäöüÄÖÜß0-9](?:[a-zäöüÄÖÜß0-9\-]*[a-zäöüÄÖÜß0-9])?\.)+(?:[A-Za-z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)\b/gim;
 
                 if (text && regex.test(text)) {
@@ -230,7 +230,7 @@
              *
              */
 
-            mergeObjects = function(configObject, defaultObject) {
+            mergeObjects = function (configObject, defaultObject) {
                 var mergedObject = {};
 
                 mergedObject = this.copyObjectPropertiesFromTo(mergedObject, defaultObject);
@@ -246,16 +246,18 @@
                 var prop;
 
                 for (prop in senderObject) {
-                    try {
-                        // Property in destination object set; update its value.
-                        if (senderObject[prop].constructor === Object) {
-                            targetObject[prop] = this.mergeObjects(targetObject[prop], senderObject[prop]);
-                        } else {
+                    if (senderObject.hasOwnProperty(prop)) {
+                        try {
+                            // Property in destination object set; update its value.
+                            if (senderObject[prop].constructor === Object) {
+                                targetObject[prop] = this.mergeObjects(targetObject[prop], senderObject[prop]);
+                            } else {
+                                targetObject[prop] = senderObject[prop];
+                            }
+                        } catch (e) {
+                            // Property in destination object not set; create it and set its value.
                             targetObject[prop] = senderObject[prop];
                         }
-                    } catch (e) {
-                        // Property in destination object not set; create it and set its value.
-                        targetObject[prop] = senderObject[prop];
                     }
                 }
 
@@ -273,7 +275,7 @@
              * @param {any} subject
              * @returns {string} Type of subject, e.g. 'string', 'regexp', 'undefined', 'element'
              */
-            type = function(subject) {
+            type = function (subject) {
                 var typeResult,
                     toStringResult,
                     regex = /\[object (\w+)\]/g;
@@ -302,20 +304,23 @@
              * @param {string} text
              * @returns {string} Parameterized string, e.g. 'hello-world-and-oesterreich'
              */
-            parameterize = function(text) {
+            parameterize = function (text) {
                 if (text === undefined) { return ''; }
-                var replaceMap = {
-                    'ae' : /ä/,
-                    'oe' : /ö/,
-                    'ue' : /ü/,
-                    'ss' : /ß/,
-                    '-'  : /[^a-z0-9]+/gi, // global and case insensitive matching of non-char/non-numeric
-                    ''   : /^-*|-*$/g      // get rid of any leading/trailing dashes
-                };
+                var srcString,
+                    replaceMap = {
+                        'ae' : /ä/,
+                        'oe' : /ö/,
+                        'ue' : /ü/,
+                        'ss' : /ß/,
+                        '-'  : /[^a-z0-9]+/gi, // global and case insensitive matching of non-char/non-numeric
+                        ''   : /^-*|-*$/g      // get rid of any leading/trailing dashes
+                    };
 
                 text = text.toLowerCase(); // first: make it small
-                for(var srcString in replaceMap) {
-                    text = text.replace(replaceMap[srcString], srcString);
+                for (srcString in replaceMap) {
+                    if (replaceMap.hasOwnProperty(srcString)) {
+                        text = text.replace(replaceMap[srcString], srcString);
+                    }
                 }
                 return text;
             };
@@ -328,7 +333,7 @@
              * @param {string} url
              * @param {requestCallback} callback - Function to execute when script has loaded
              */
-            loadScriptAsync = function(url, callback) {
+            loadScriptAsync = function (url, callback) {
                 var script = document.createElement("script");
 
                 if (script.readyState) { //IE
