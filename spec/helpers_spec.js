@@ -377,6 +377,42 @@ describe("Helpers module", function() {
             });
         });
 
+        describe('mergeObjects method', function() {
+            it("is present", function() {
+                expect(helpers.mergeObjects).toBeDefined();
+            });
+        });
+
+        describe('copyObjectPropertiesFromTo method', function() {
+            it("is present", function() {
+                expect(helpers.copyObjectPropertiesFromTo).toBeDefined();
+            });
+        });
+
+        describe('createConfigObject method', function() {
+            it("is present", function() {
+                expect(helpers.createConfigObject).toBeDefined();
+            });
+        });
+
+        describe('addListener method', function() {
+            it("is present", function() {
+                expect(helpers.addListener).toBeDefined();
+            });
+        });
+
+        describe('removeListener method', function() {
+            it("is present", function() {
+                expect(helpers.removeListener).toBeDefined();
+            });
+        });
+
+        describe('insertAfter method', function() {
+            it("is present", function() {
+                expect(helpers.insertAfter).toBeDefined();
+            });
+        });
+
     });
 
 });

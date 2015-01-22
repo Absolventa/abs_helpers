@@ -1,7 +1,7 @@
 {
   "name": "ABSOLVENTA Helpers",
   "description": "Module.js based module including several helper functions.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "authors": [
     "Alex Gieche <alex.gieche@gmail.com>"
   ],
