@@ -24,19 +24,24 @@
                 type;
 
 
-            addListener = function (obj, evt, fnc) {
+            addListener = function (obj, evt, fnc, capture) {
                 /**
                 * Cross Browser helper to addEventListener.
                 *
                 * @param {HTMLElement} obj The Element to attach event to.
                 * @param {string} evt The event that will trigger the binded function.
                 * @param {function(event)} fnc The function to bind to the element.
+                * @param {boolean} capture Should the event be captured before event bubbling
                 * @return {boolean} true if it was successfuly binded.
                 */
 
+                if (capture === undefined) {
+                    capture = false;
+                }
+
                 // W3C model
                 if (obj.addEventListener) {
-                    obj.addEventListener(evt, fnc, false);
+                    obj.addEventListener(evt, fnc, capture);
                     return true;
                 }
                 // Microsoft model
@@ -48,9 +53,14 @@
                 return false;
             };
 
-            removeListener = function (obj, type, fnc) {
+            removeListener = function (obj, type, fnc, capture) {
+
+                if (capture === undefined) {
+                    capture = false;
+                }
+
                 if (obj.removeEventListener) {
-                    obj.removeEventListener(type, fnc, false);
+                    obj.removeEventListener(type, fnc, capture);
                 } else if (obj.detachEvent) {
                     obj.detachEvent("on" + type, fnc);
                 }
