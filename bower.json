@@ -18,7 +18,9 @@
     "gulpfile.js",
     "karma.conf.js",
     "package.json",
-    "readme.md"
+    "readme.md",
+    "fixtures"
+
   ],
   "dependencies": {
     "modulejs": "1.5.0"
