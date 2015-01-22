@@ -1,12 +1,14 @@
 {
   "name": "ABSOLVENTA Helpers",
+  "description": "Module.js based module including several helper functions.",
   "version": "1.0.0",
   "authors": [
     "Alex Gieche <alex.gieche@gmail.com>"
   ],
   "main": "src/helpers.js",
   "license": "MIT",
-  "private": true,
+  "keywords": ["absolventa"],
+  "private": false,
   "ignore": [
     "**/.*",
     "node_modules",
